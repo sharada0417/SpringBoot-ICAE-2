@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.example.demo.model.Book;
 import com.example.demo.repo.BookRepo;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class BookService {
 	@Autowired
@@ -15,7 +17,7 @@ public class BookService {
 	
 	public List<Book>getByGenre(String gen){
 		if(repo.findByGenre(gen).isEmpty()) {
-			throw new Error("Book not Found");
+			throw new EntityNotFoundException("Book not Found");
 		}
 		return repo.findByGenre(gen);
 	}

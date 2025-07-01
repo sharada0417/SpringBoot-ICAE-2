@@ -12,6 +12,8 @@ import com.example.demo.repo.BookRepo;
 import com.example.demo.repo.BorrowRepo;
 import com.example.demo.repo.StudentRepo;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class BorrowService {
 	@Autowired
@@ -25,26 +27,26 @@ public class BorrowService {
 	
 	public List<Borrow>getStu(String bid){
 		if(repo.whoBorrowed(bid).isEmpty()) {
-			throw new Error("student not found");
+			throw new EntityNotFoundException("student not found");
 		}
 		return repo.whoBorrowed(bid);
 	}
 	
 	public String borrowBook(BookLend lend) {
 		if(!bookRepo.findById(lend.getBookId()).isPresent()) {
-			throw new Error("Book not found");
+			throw new EntityNotFoundException("Book not found");
 		}
 		
 		if(!studentRepo.findById(lend.getStudentId()).isPresent()){
-			throw new Error("student not found");
+			throw new EntityNotFoundException("student not found");
 		}
 		
 		if(repo.unreturnBooks(lend.getStudentId())>2) {
-			throw new Error("Please return the books");
+			throw new RuntimeException("Please return the books");
 		}
 		
 		if(bookRepo.findById(lend.getBookId()).get().getCopiesAvailable()<2){
-			throw new Error("Not enough copies available");
+			throw new RuntimeException("Not enough copies available");
 		}
 		
 		
